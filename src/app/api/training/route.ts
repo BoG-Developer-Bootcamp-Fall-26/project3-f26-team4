@@ -80,6 +80,7 @@ export async function POST(request: Request) {
         const url = new URL(request.url);
         const baseUrl = url.origin;
 
+        // for future ref, updating it directly is more effective (prevents needing to do another HTTP req), but proj description specifically asks for it
         const response = await fetch(`${baseUrl}/api/animal`, {
             method: "PATCH",
             headers: {
