@@ -170,6 +170,11 @@ export async function DELETE(request: Request) {
             throw new Error("Failed to delete training log.");
         }
 
+        return NextResponse.json(
+            { message: "Training log deleted successfully!" },
+            { status: 200 }
+        );
+
     } catch (error) {
         console.error("Error deleting training log:", error);
 
