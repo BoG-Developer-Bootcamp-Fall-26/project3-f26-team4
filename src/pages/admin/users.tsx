@@ -87,9 +87,6 @@ export default function AdminUsersPage() {
                         <h1 className="text-3xl font-bold text-gray-900">
                             All Users
                         </h1>
-                        <p className="mt-2 text-gray-600">
-                            View all registered users.
-                        </p>
                     </div>
                 </div>
 
@@ -100,7 +97,6 @@ export default function AdminUsersPage() {
                                 <th className="px-6 py-4">Name</th>
                                 <th className="px-6 py-4">Email</th>
                                 <th className="px-6 py-4">Account Type</th>
-                                <th className="px-6 py-4">User ID</th>
                             </tr>
                         </thead>
 
@@ -126,10 +122,6 @@ export default function AdminUsersPage() {
                                         }`}>
                                             {user.admin ? "Admin" : "User"}
                                         </span>
-                                    </td>
-
-                                    <td className="px-6 py-4 text-xs text-gray-500">
-                                        {user._id}
                                     </td>
                                 </tr>
                             ))}
