@@ -62,3 +62,36 @@ export async function PATCH(request: Request) {
         );
     }
 }
+
+export async function GET(request: Request) {
+    try {
+        const { searchParams } = new URL(request.url);
+        const userId = searchParams.get("userId");
+
+        if (!userId || !ObjectId.isValid(userId)) {
+            return NextResponse.json(
+                { message: "Invalid or missing userId." },
+                { status: 400 }
+            );
+        }
+
+        const { db } = await connectToDatabase();
+
+        const animals = await db.collection("animals")
+            .find({ owner: new ObjectId(userId) })
+            .toArray();
+
+        return NextResponse.json(
+            { animals },
+            { status: 200 }
+        );
+
+    } catch (error) {
+        console.error("Error retrieving animals:", error);
+
+        return NextResponse.json(
+            { message: "Something went wrong retrieving animals." },
+            { status: 500 }
+        );
+    }
+}

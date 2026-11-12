@@ -12,7 +12,14 @@ export default function Sidebar() {
         <aside className="bg-white w-[250px] min-h-screen border-r border-gray-200 p-5">
             <nav className="flex flex-col">
                 <div className="flex flex-col gap-2">
-                    <Link href="/training-logs" className="flex items-center">
+                    <Link 
+                        href="/training-logs" 
+                        className={`flex items-center gap-3 p-3 rounded-lg ${
+                            isActive("/training-logs")
+                                ? "bg-red-600 text-white"
+                                : "bg-transparent text-gray-500"
+                        }`}
+                    >
                         <img 
                             src={isActive("/training-logs")
                                 ? "/images/activeTrainingLogo.png"
@@ -20,11 +27,18 @@ export default function Sidebar() {
                             alt="trainings logo" 
                             className="pr-3"
                         />
-                        <p className={isActive("/training-logs") ? "text-white" : "text-gray-500"}>
+                        <p>
                             Training Logs
                         </p>
                     </Link>
-                    <Link href="/animals" className="flex items-center">
+                    <Link 
+                        href="/animals" 
+                        className={`flex items-center gap-3 p-3 rounded-lg ${
+                            isActive("/animals")
+                                ? "bg-red-600 text-white"
+                                : "bg-transparent text-gray-500"
+                        }`}
+                    >
                         <img 
                             src={isActive("/animals")
                                 ? "/images/activeAnimalsLogo.png"
@@ -32,7 +46,7 @@ export default function Sidebar() {
                             alt="animals logo" 
                             className="pr-3"
                         />
-                        <p className={isActive("/animals") ? "text-white" : "text-gray-500"}>
+                        <p>
                             Animals
                         </p>
                     </Link>
@@ -41,7 +55,14 @@ export default function Sidebar() {
                 {!loading && user?.admin && (
                     <div className="flex flex-col gap-2">
                         <h2 className="font-bold text-gray-500 pt-8 pb-3">Admin access</h2>
-                        <Link href="/admin/training" className="flex items-center">
+                        <Link 
+                            href="/admin/training" 
+                            className={`flex items-center gap-3 p-3 rounded-lg ${
+                                isActive("/admin/training")
+                                    ? "bg-red-600 text-white"
+                                    : "bg-transparent text-gray-500"
+                            }`}
+                        >
                             <img 
                                 src={isActive("/admin/training")
                                     ? "/images/activeAllTrainingLogo.png"
@@ -49,11 +70,18 @@ export default function Sidebar() {
                                 alt="animals logo" 
                                 className="pr-3"
                             />
-                            <p className={isActive("/admin/training") ? "text-white" : "text-gray-500"}>
+                            <p>
                                 All training
                             </p>
                         </Link>
-                        <Link href="/admin/animals" className="flex items-center">
+                        <Link 
+                            href="/admin/animals" 
+                            className={`flex items-center gap-3 p-3 rounded-lg ${
+                                isActive("/admin/animals")
+                                    ? "bg-red-600 text-white"
+                                    : "bg-transparent text-gray-500"
+                            }`}
+                        >
                             <img 
                                 src={isActive("/admin/animals")
                                     ? "/images/activeAllAnimalsLogo.png"
@@ -61,11 +89,18 @@ export default function Sidebar() {
                                 alt="animals logo" 
                                 className="pr-3"
                             />
-                            <p className={isActive("/admin/animals") ? "text-white" : "text-gray-500"}>
+                            <p>
                                 All animals
                             </p>
                         </Link>
-                        <Link href="/admin/users" className="flex items-center">
+                        <Link 
+                            href="/admin/users" 
+                            className={`flex items-center gap-3 p-3 rounded-lg ${
+                                isActive("/admin/users")
+                                    ? "bg-red-600 text-white"
+                                    : "bg-transparent text-gray-500"
+                            }`}
+                        >
                             <img 
                                 src={isActive("/admin/users")
                                     ? "/images/activeAllUsersLogo.png"
@@ -73,7 +108,7 @@ export default function Sidebar() {
                                 alt="animals logo" 
                                 className="pr-3"
                             />
-                            <p className={isActive("/admin/users") ? "text-white" : "text-gray-500"}>
+                            <p>
                                 All users
                             </p>
                         </Link>

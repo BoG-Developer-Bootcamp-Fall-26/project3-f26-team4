@@ -2,6 +2,60 @@ import { NextResponse } from "next/server";
 import { connectToDatabase } from "@/lib/mongodb";
 import { ObjectId } from "mongodb";
 
+export async function GET(request: Request) {
+    try {
+        // Get the userId from the URL
+        const { searchParams } = new URL(request.url);
+        const userId = searchParams.get("userId");
+
+        // Validate
+        if (!userId || !ObjectId.isValid(userId)) {
+            return NextResponse.json(
+                { message: "Invalid or missing userId." },
+                { status: 400 }
+            );
+        }
+
+        const { db } = await connectToDatabase();
+
+        // Find user training logs
+        const trainingLogs = await db.collection("trainingLogs")
+            .find({ user: new ObjectId(userId) })
+            .sort({ date: -1 })
+            .toArray();
+
+        const animalIds = [
+            ...new Set(trainingLogs.map(log => log.animal.toString()))
+        ].map(id => new ObjectId(id));
+
+        const animals = await db.collection("animals")
+            .find({ _id: { $in: animalIds } })
+            .project({ name: 1, breed: 1 })
+            .toArray();
+
+        // Match each training log with its animal
+        const logsWithAnimals = trainingLogs.map(log => ({
+            ...log,
+            animalDetails: animals.find(
+                animal => animal._id.toString() === log.animal.toString()
+            ) ?? null
+        }));
+
+        return NextResponse.json(
+            { trainingLogs: logsWithAnimals },
+            { status: 200 }
+        );
+
+    } catch (error) {
+        console.error("Error retrieving training logs:", error);
+
+        return NextResponse.json(
+            { message: "Something went wrong retrieving training logs." },
+            { status: 500 }
+        );
+    }
+}
+
 export async function POST(request: Request) {
     try {
 
