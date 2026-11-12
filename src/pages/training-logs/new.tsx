@@ -124,7 +124,7 @@ export default function NewTrainingLog() {
     }
 
     return (
-        <div className="p-8">
+        <div className="bg-white p-8 min-h-[calc(100vh-80px)] text-gray-700">
             <h1 className="text-3xl font-bold mb-8">
                 New Training Log
             </h1>

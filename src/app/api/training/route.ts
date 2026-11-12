@@ -170,6 +170,123 @@ export async function POST(request: Request) {
     }
 }
 
+export async function PATCH(request: Request) {
+    try {
+        const body = await request.json();
+
+        const {
+            trainingLogId,
+            userId,
+            title,
+            description,
+            hours,
+            date
+        } = body;
+
+        // Validate the submitted information
+        if (
+            typeof trainingLogId !== "string" ||
+            typeof userId !== "string" ||
+            typeof title !== "string" ||
+            typeof description !== "string" ||
+            typeof hours !== "number" ||
+            !Number.isFinite(hours) ||
+            hours <= 0 ||
+            !title.trim() ||
+            !description.trim() ||
+            typeof date !== "string" ||
+            !Number.isFinite(new Date(date).getTime()) ||
+            !ObjectId.isValid(trainingLogId) ||
+            !ObjectId.isValid(userId)
+        ) {
+            return NextResponse.json(
+                { message: "Invalid or missing fields." },
+                { status: 400 }
+            );
+        }
+
+        const { db } = await connectToDatabase();
+
+        const trainingLogs = db.collection("trainingLogs");
+        const animals = db.collection("animals");
+
+        // Find the existing training log belonging to this user
+        const existingLog = await trainingLogs.findOne({
+            _id: new ObjectId(trainingLogId),
+            user: new ObjectId(userId)
+        });
+
+        if (!existingLog) {
+            return NextResponse.json(
+                { message: "Training log not found." },
+                { status: 404 }
+            );
+        }
+
+        // Check that the animal still belongs to this user
+        const animal = await animals.findOne({
+            _id: existingLog.animal,
+            owner: new ObjectId(userId)
+        });
+
+        if (!animal) {
+            return NextResponse.json(
+                { message: "Animal not found." },
+                { status: 404 }
+            );
+        }
+
+        // Calculate the difference in training hours
+        const hoursDifference = hours - existingLog.hours;
+
+        // Update the animal's total hours if necessary
+        if (hoursDifference !== 0) {
+            const url = new URL(request.url);
+
+            const response = await fetch(`${url.origin}/api/animal`, {
+                method: "PATCH",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    animalId: existingLog.animal.toString(),
+                    hours: hoursDifference
+                })
+            });
+
+            if (!response.ok) {
+                throw new Error("Failed to update animal hours.");
+            }
+        }
+
+        // Update the training log
+        await trainingLogs.updateOne(
+            { _id: new ObjectId(trainingLogId) },
+            {
+                $set: {
+                    title: title.trim(),
+                    description: description.trim(),
+                    hours: hours,
+                    date: new Date(date)
+                }
+            }
+        );
+
+        return NextResponse.json(
+            { message: "Training log updated successfully!" },
+            { status: 200 }
+        );
+
+    } catch (error) {
+        console.error("Error updating training log:", error);
+
+        return NextResponse.json(
+            { message: "Something went wrong updating the training log." },
+            { status: 500 }
+        );
+    }
+}
+
 export async function DELETE(request: Request) {
     try {
         const body = await request.json();

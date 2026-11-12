@@ -6,7 +6,7 @@ import { useRouter } from "next/router";
 // ReactNode is a typescript type that describes the kind of things react can display
 export default function AppLayout({ children }: { children: ReactNode }) {
     const router = useRouter();
-    const hideSidebar = ["/login", "/create-account"].includes(router.pathname);
+    const hideSidebar = ["/login", "/create-account", "/signup"].includes(router.pathname);
 
     return (
         <div className="min-h-screen">

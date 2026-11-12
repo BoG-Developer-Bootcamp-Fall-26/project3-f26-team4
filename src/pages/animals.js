@@ -23,11 +23,15 @@ export default function AnimalsPage() {
 
   const fetchAnimals = async () => {
     try {
-      const res = await fetch("/api/animal");
+      const res = await fetch(`/api/animal?userId=${user.userId}`);
       const data = await res.json();
-      if (Array.isArray(data)) {
+
+      if (Array.isArray(data.animals)) {
+        setAnimals(data.animals);
+      } else if (Array.isArray(data)) {
         setAnimals(data);
       }
+
     } catch (err) {
       console.error("Failed to fetch animals:", err);
     }
