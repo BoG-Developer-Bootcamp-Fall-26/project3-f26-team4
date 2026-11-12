@@ -121,7 +121,7 @@ export default function AdminUsersPage() {
                                     <td className="px-6 py-4">
                                         <span className={`rounded-full px-3 py-1 text-xs font-semibold ${
                                             user.admin
-                                                ? "bg-purple-100 text-purple-700"
+                                                ? "bg-red-100 text-red-700"
                                                 : "bg-gray-100 text-gray-600"
                                         }`}>
                                             {user.admin ? "Admin" : "User"}
