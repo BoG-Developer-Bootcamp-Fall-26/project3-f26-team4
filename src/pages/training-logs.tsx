@@ -71,77 +71,78 @@ export default function TrainingLogs() {
     }
 
     return (
-        <div className="min-h-[calc(100vh-80px)] bg-white p-8">
-            <div className="flex justify-between items-center pb-8 mb-8 border-b">
-                <h1 className="text-3xl font-bold text-black">Training Logs</h1>
-
-                <Link
-                    href="/training-logs/new"
-                    className="bg-red-600 text-white px-5 py-3 rounded-lg"
-                >
-                    + New Training Log
-                </Link>
-            </div>
-
-            {trainingLogs.length === 0 ? (
-                <p>You haven't created any training logs yet.</p>
-            ) : (
-                <div className="grid grid-cols-1 md:grid-cols-1 gap-5">
-                    {trainingLogs.map((log) => {
-                            const logDate = new Date(log.date);
-
-                            return (
-                                <div
-                                    key={log._id}
-                                    className="mx-15 mt-5 flex bg-white rounded-2xl shadow-md border border-gray-100 overflow-hidden min-h-[130px]"
-                                >
-
-                                    {/* Date section */}
-                                    <div className="bg-[#30316f] text-white w-[110px] shrink-0 flex flex-col items-center justify-center">
-                                        <span className="text-4xl font-bold">
-                                            {logDate.getDate()}
-                                        </span>
-
-                                        <span className="text-lg mt-1">
-                                            {logDate.toLocaleDateString("en-US", {
-                                                month: "short",
-                                                year: "numeric",
-                                            })}
-                                        </span>
-                                    </div>
-
-                                    {/* Log information */}
-                                    <div className="flex-1 p-4 sm:p-5 min-w-0">
-
-                                        <div className="flex flex-wrap items-baseline gap-2 mb-2">
-                                            <h2 className="text-xl font-bold text-[#321515]">
-                                                {log.title}
-                                            </h2>
-
-                                            <span className="text-gray-400 text-sm">
-                                                • {log.hours} hours
-                                            </span>
-                                        </div>
-
-                                        <p className="text-gray-400 text-sm font-medium mb-4">
-                                            {user.fullName}
-                                            {" - "}
-                                            {log.animalDetails?.breed ?? "Unknown breed"}
-                                            {" - "}
-                                            {log.animalDetails?.name ?? "Unknown animal"}
-                                        </p>
-
-                                        <p className="text-gray-800 text-sm">
-                                            {log.description}
-                                        </p>
-
-                                    </div>
-
-                                </div>
-                            );
-                        })}
+        <div className="h-full bg-white p-8">
+            <div className="mx-auto w-full max-w-6xl">
+    
+                <div className="mb-8 flex items-center justify-between">
+                    <div>
+                        <h1 className="text-3xl font-bold text-gray-900">
+                            Training Logs
+                        </h1>
+                    </div>
+    
+                    <Link
+                        href="/training-logs/new"
+                        className="rounded-lg bg-[#30316f] px-5 py-3 text-white hover:bg-[#24255a]"
+                    >
+                        Create New
+                    </Link>
                 </div>
-            )}
+    
+                {trainingLogs.length === 0 ? (
+                    <p className="text-gray-600">No training logs found.</p>
+                ) : (
+                    <div className="flex flex-col gap-5">
+                        {trainingLogs.map((log) => (
+                            <div
+                                key={log._id}
+                                className="flex min-h-[150px] w-full overflow-hidden rounded-xl border border-gray-200 shadow-sm"
+                            >
+                                <div className="flex w-[110px] shrink-0 flex-col items-center justify-center bg-[#30316f] p-4 text-center text-white">
+                                    <span className="text-2xl font-bold">
+                                        {new Date(log.date).getDate()}
+                                    </span>
+                                    <span className="text-sm">
+                                        {new Date(log.date).toLocaleString("default", {
+                                            month: "short",
+                                        })}
+                                    </span>
+                                    <span className="text-sm">
+                                        {new Date(log.date).getFullYear()}
+                                    </span>
+                                </div>
+    
+                                <div className="flex flex-1 flex-col justify-center p-5">
+                                    <div className="flex flex-wrap items-center justify-between gap-2">
+                                        <h2 className="text-xl font-bold text-gray-900">
+                                            {log.title}
+                                        </h2>
+    
+                                        <span className="font-semibold text-[#30316f]">
+                                            {log.hours} hours
+                                        </span>
+                                    </div>
+    
+                                    <p className="mt-2 text-sm text-gray-600">
+                                        <strong>User:</strong> {user?.fullName}
+                                    </p>
+    
+                                    <p className="mt-1 text-sm text-gray-600">
+                                        <strong>Animal:</strong> {log.animalDetails?.name ?? "Unknown animal"}
+                                        {" | "}
+                                        {log.animalDetails?.breed ?? "Unknown breed"}
+                                    </p>
+    
+                                    <p className="mt-3 text-gray-700">
+                                        {log.description}
+                                    </p>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                )}
+    
+            </div>
         </div>
     );
 }

@@ -1,0 +1,140 @@
+
+import { useState, useEffect } from "react";
+import Link from "next/link";
+import { useAuth } from "@/context/AuthContext";
+
+interface TrainingLog {
+    _id: string;
+    title: string;
+    date: string;
+    description: string;
+    hours: number;
+    userDetails: {
+        fullName: string;
+        email: string;
+    } | null;
+    animalDetails: {
+        name: string;
+        breed: string;
+    } | null;
+}
+
+export default function AdminTraining() {
+    const { user, loading } = useAuth();
+
+    const [trainingLogs, setTrainingLogs] = useState<TrainingLog[]>([]);
+    const [fetching, setFetching] = useState(true);
+    const [error, setError] = useState("");
+
+    useEffect(() => {
+        async function getTrainingLogs() {
+            try {
+                setFetching(true);
+                setError("");
+
+                const response = await fetch("/api/admin/training");
+                const data = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(data.message || "Could not retrieve training logs.");
+                }
+
+                setTrainingLogs(data.trainingLogs);
+            } catch (error) {
+                console.error(error);
+                setError("Something went wrong while retrieving training logs.");
+            } finally {
+                setFetching(false);
+            }
+        }
+
+        if (!loading && user?.admin) {
+            getTrainingLogs();
+        } else if (!loading) {
+            setFetching(false);
+        }
+    }, [user, loading]);
+
+    if (loading || fetching) {
+        return <p className="p-8">Loading training logs...</p>;
+    }
+
+    if (!user?.admin) {
+        return <p className="p-8">You do not have permission to view this page.</p>;
+    }
+
+    if (error) {
+        return <p className="p-8 text-red-600">{error}</p>;
+    }
+
+    return (
+        <div className="h-full bg-white p-8">
+            <div className="mx-auto w-full max-w-6xl">
+
+                <div className="mb-8 flex items-center justify-between">
+                    <div>
+                        <h1 className="text-3xl font-bold text-gray-900">
+                            Admin Training Logs
+                        </h1>
+                    </div>
+                </div>
+
+                {trainingLogs.length === 0 ? (
+                    <p className="text-gray-600">No training logs found.</p>
+                ) : (
+                    <div className="flex flex-col gap-5">
+                        {trainingLogs.map((log) => (
+                            <div
+                                key={log._id}
+                                className="flex min-h-[150px] w-full overflow-hidden rounded-xl border border-gray-200 shadow-sm"
+                            >
+                                <div className="flex w-[110px] shrink-0 flex-col items-center justify-center bg-[#30316f] p-4 text-center text-white">
+                                    <span className="text-2xl font-bold">
+                                        {new Date(log.date).getDate()}
+                                    </span>
+                                    <span className="text-sm">
+                                        {new Date(log.date).toLocaleString("default", {
+                                            month: "short",
+                                        })}
+                                    </span>
+                                    <span className="text-sm">
+                                        {new Date(log.date).getFullYear()}
+                                    </span>
+                                </div>
+
+                                <div className="flex flex-1 flex-col justify-center p-5">
+                                    <div className="flex flex-wrap items-center justify-between gap-2">
+                                        <h2 className="text-xl font-bold text-gray-900">
+                                            {log.title}
+                                        </h2>
+
+                                        <span className="font-semibold text-[#30316f]">
+                                            {log.hours} hours
+                                        </span>
+                                    </div>
+
+                                    <p className="mt-2 text-sm text-gray-600">
+                                        <strong>User:</strong> {log.userDetails?.fullName ?? "Unknown user"}
+                                        {" | "}
+                                        {log.userDetails?.email ?? "No email"}
+                                    </p>
+
+                                    <p className="mt-1 text-sm text-gray-600">
+                                        <strong>Animal:</strong> {log.animalDetails?.name ?? "Unknown animal"}
+                                        {" | "}
+                                        {log.animalDetails?.breed ?? "Unknown breed"}
+                                    </p>
+
+                                    <p className="mt-3 text-gray-700">
+                                        {log.description}
+                                    </p>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                )}
+
+            </div>
+        </div>
+    );
+}

@@ -9,8 +9,8 @@ export default function Sidebar() {
     const isActive = (path: string) => router.pathname === path;
 
     return (
-        <aside className="bg-white w-[250px] min-h-[calc(100vh-80px)] border-r border-gray-200 p-5">
-            <nav className="min-h-[calc(100vh-120px)] flex flex-col">
+        <aside className="bg-white w-[250px] min-h-[calc(100vh-80px)] border-r border-gray-200 px-5 py-8">
+            <nav className="h-full flex flex-col">
                 <div className="flex flex-col gap-2">
                     <Link 
                         href="/training-logs" 
