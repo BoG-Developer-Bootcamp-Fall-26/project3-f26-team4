@@ -1,7 +1,20 @@
+import { useEffect } from "react";
+import { useRouter } from "next/router";
+import { useAuth } from "@/context/AuthContext";
+
 export default function Home() {
-  return (
-    <div>
-      What's Up
-    </div>
-  );
+  const { user, loading } = useAuth();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (!loading) {
+      if (user) {
+        router.replace("/animals");
+      } else {
+        router.replace("/login");
+      }
+    }
+  }, [user, loading, router]);
+
+  return null;
 }
