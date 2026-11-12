@@ -59,6 +59,7 @@ export default function NewTrainingLog() {
 
     // Submit the new training log
     async function handleSubmit(event: FormEvent<HTMLFormElement>) {
+        // prevents default behaviour of refreshing the page (let React handle it instead)
         event.preventDefault();
 
         setError("");
@@ -173,7 +174,7 @@ export default function NewTrainingLog() {
                     <textarea
                         value={description}
                         onChange={(event) => setDescription(event.target.value)}
-                        placeholder="Describe what you worked on..."
+                        placeholder="Describe what you worked on"
                         rows={4}
                         className="w-full border border-gray-300 rounded-lg p-3"
                     />

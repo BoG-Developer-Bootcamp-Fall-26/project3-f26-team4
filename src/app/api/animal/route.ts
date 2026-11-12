@@ -114,6 +114,7 @@ export async function GET(request: Request) {
                 }
             },
             {
+                // normally returns an array, unwind makes it into an object
                 $unwind: "$owner"
             },
             {
